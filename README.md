@@ -24,7 +24,7 @@ Private workspace for generative media with own key, domain, and storage.
 
 <strong>Checks</strong>
 
-[![Netlify Status](https://img.shields.io/netlify/1497e7e3-a5a1-487b-9cd3-601a797baa4e?style=for-the-badge&logo=netlify&logoColor=white&label=netlify&color=BEF9C6)](https://app.netlify.com/projects/sherin-for-qwen/deploys)
+[![Netlify Status](https://img.shields.io/netlify/e71095c9-7b3b-448d-9b89-df414f222491?style=for-the-badge&logo=netlify&logoColor=white&label=netlify&color=BEF9C6)](https://app.netlify.com/projects/sherin-for-qwen/deploys)
 [![GitLabCI](https://img.shields.io/gitlab/pipeline-status/babysea/sherin-for-qwen?branch=main&style=for-the-badge&label=gitlabci&logo=gitlab&logoColor=white&color=FC6D26)](https://gitlab.com/babysea/sherin-for-qwen/-/commits/main)
 [![Sentry](https://img.shields.io/github/actions/workflow/status/babysea-community/sherin-for-qwen/sentry-check.yml?style=for-the-badge&label=sentry&logo=sentry&logoColor=white&color=181225)](https://github.com/babysea-community/sherin-for-qwen/actions/workflows/sentry-check.yml)
 [![CodeQL](https://img.shields.io/github/actions/workflow/status/babysea-community/sherin-for-qwen/codeql.yml?style=for-the-badge&label=codeql&logo=github&logoColor=white)](https://github.com/babysea-community/sherin-for-qwen/actions/workflows/codeql.yml)

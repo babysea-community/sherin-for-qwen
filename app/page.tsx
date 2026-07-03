@@ -18,6 +18,12 @@ import {
   InlineVercelLight,
 } from '@/components/icons/inline-host';
 import { InlineAlibabaCloud } from '@/components/icons/inline-inference';
+import {
+  InlineHappyHorse,
+  InlineQwen,
+  InlineWan,
+  InlineZImage,
+} from '@/components/icons/inline-model';
 import { InlineGitHub } from '@/components/icons/inline-git';
 import {
   InlineAwsS3,
@@ -68,9 +74,29 @@ type StackItem = {
   label?: string;
 };
 
+function modelVendorIcon(modelId: string) {
+  if (modelId.startsWith('qwen/')) {
+    return InlineQwen;
+  }
+
+  if (modelId.startsWith('wan/')) {
+    return InlineWan;
+  }
+
+  if (modelId.startsWith('happyhorse/')) {
+    return InlineHappyHorse;
+  }
+
+  if (modelId.startsWith('z/')) {
+    return InlineZImage;
+  }
+
+  return InlineAlibabaCloud;
+}
+
 const supportedModels = MODEL_OPTIONS.map((model) => ({
   ariaLabel: model.label,
-  Icon: InlineAlibabaCloud,
+  Icon: modelVendorIcon(model.id),
   label: model.label,
 })) satisfies StackItem[];
 
