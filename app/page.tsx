@@ -19,7 +19,7 @@ import {
 } from '@/components/icons/inline-host';
 import { InlineAlibabaCloud } from '@/components/icons/inline-inference';
 import {
-  InlineHappyHorse,
+  InlineHappyHorseLight,
   InlineQwen,
   InlineWan,
   InlineZImage,
@@ -84,7 +84,7 @@ function modelVendorIcon(modelId: string) {
   }
 
   if (modelId.startsWith('happyhorse/')) {
-    return InlineHappyHorse;
+    return InlineHappyHorseLight;
   }
 
   if (modelId.startsWith('z/')) {
