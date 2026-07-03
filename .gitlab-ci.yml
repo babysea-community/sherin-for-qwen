@@ -1,0 +1,206 @@
+include:
+  - template: Jobs/SAST.gitlab-ci.yml
+  - template: Jobs/SAST-IaC.gitlab-ci.yml
+  - template: Jobs/Dependency-Scanning.gitlab-ci.yml
+  - template: Jobs/Secret-Detection.gitlab-ci.yml
+  - template: Jobs/Code-Quality.gitlab-ci.yml
+  - template: Jobs/Container-Scanning.gitlab-ci.yml
+  - template: DAST.gitlab-ci.yml
+
+stages:
+  - verify
+  - test
+  - build
+  - security
+  - dast
+
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "external_pull_request_event"'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_TAG'
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+
+variables:
+  GIT_DEPTH: '0'
+  AST_ENABLE_MR_PIPELINES: 'true'
+  GITLAB_ADVANCED_SAST_ENABLED: 'true'
+  SECURE_LOG_LEVEL: warn
+  SAST_EXCLUDED_PATHS: '.next,.pnpm-store,dist,build,node_modules,public'
+  DS_EXCLUDED_PATHS: '.next,.pnpm-store,dist,build,node_modules,public'
+  SECRET_DETECTION_EXCLUDED_PATHS: '.next,.pnpm-store,dist,build,node_modules,public'
+  SECRET_DETECTION_HISTORIC_SCAN: 'true'
+  CONTAINER_SCANNING_DISABLED: 'false'
+  CS_DISABLE_DEPENDENCY_LIST: 'false'
+  DAST_BROWSER_SCAN: 'true'
+  PNPM_VERSION: '11.7.0'
+  PNPM_INSTALL_FLAGS: --frozen-lockfile --ignore-scripts
+  PNPM_CONFIG_MINIMUM_RELEASE_AGE: '0'
+  DAST_WEBSITE: https://sherin-for-qwen.babysea.live
+  NEXT_PUBLIC_SITE_URL: https://your-domain.example.com
+  OWNER_EMAIL: owner@example.com
+  NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
+  NEXT_PUBLIC_SUPABASE_PUBLIC_KEY: ci_supabase_public_key
+  SUPABASE_SECRET_KEY: ci_supabase_secret_key
+  INFERENCE_PROVIDER: alibaba-cloud
+  DASHSCOPE_API_KEY: ci_alibaba_cloud_api_key
+  BABYSEA_API_KEY: ci_babysea_api_key
+  BABYSEA_API_BASE_URL: https://api.us.babysea.ai
+  STORAGE_PROVIDER: supabase-storage
+  CUSTOM_USER_STORAGE_QUOTA_GB: '10'
+  AWS_S3_REGION: ci_aws_s3_region
+  AWS_S3_ACCESS_KEY_ID: ci_aws_s3_access_key_id
+  AWS_S3_SECRET_ACCESS_KEY: ci_aws_s3_secret_access_key
+  AWS_S3_BUCKET_NAME: ci_aws_s3_bucket_name
+  AWS_S3_ENDPOINT_URL: https://example.s3.amazonaws.com
+  CLOUDFLARE_R2_ACCOUNT_ID: example
+  CLOUDFLARE_R2_ACCESS_KEY_ID: ci_cloudflare_r2_access_key_id
+  CLOUDFLARE_R2_SECRET_ACCESS_KEY: ci_cloudflare_r2_secret_access_key
+  CLOUDFLARE_R2_BUCKET_NAME: ci_cloudflare_r2_bucket_name
+  CLOUDFLARE_R2_ENDPOINT_URL: https://example.r2.cloudflarestorage.com
+  CLOUDFLARE_R2_CUSTOM_DOMAIN_URL: https://example.pub-token.r2.dev
+  BLOB_READ_WRITE_TOKEN: ci_blob_read_write_token
+  CRON_SECRET: ci_cron_secret
+  NEXT_PUBLIC_SENTRY_DSN: https://example.sentry.io
+  NEXT_PUBLIC_SENTRY_ENVIRONMENT: ci_sentry_environment
+  SENTRY_ORG: ci_sentry_org
+  SENTRY_PROJECT: ci_sentry_project
+  SENTRY_AUTH_TOKEN: ci_sentry_auth_token
+
+default:
+  interruptible: true
+  retry:
+    max: 1
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
+
+container_scanning:
+  stage: security
+  allow_failure: true
+  rules:
+    - if: '$CONTAINER_SCANNING_DISABLED == "true" || $CONTAINER_SCANNING_DISABLED == "1"'
+      when: never
+    - if: '$CS_IMAGE'
+    - when: never
+
+code_quality:
+  allow_failure: true
+
+gemnasium-dependency_scanning:
+  allow_failure: true
+
+gitlab-advanced-sast:
+  allow_failure: true
+
+kics-iac-sast:
+  allow_failure: true
+
+secret_detection:
+  allow_failure: true
+
+.pnpm-job:
+  image: node:24-bookworm
+  cache:
+    key:
+      files:
+        - pnpm-lock.yaml
+      prefix: pnpm-${CI_COMMIT_REF_SLUG}
+    paths:
+      - .pnpm-store/
+  before_script:
+    - corepack enable
+    - corepack prepare pnpm@$PNPM_VERSION --activate
+    - pnpm config set store-dir .pnpm-store
+    - pnpm install $PNPM_INSTALL_FLAGS
+
+verify:doctor:
+  stage: verify
+  extends: .pnpm-job
+  timeout: 10m
+  script:
+    - |
+      if node -e "const pkg=require('./package.json'); process.exit(pkg.scripts?.doctor ? 0 : 1)"; then
+        pnpm doctor
+      else
+        echo 'No doctor script; skipping.'
+      fi
+
+verify:format:
+  stage: verify
+  extends: .pnpm-job
+  timeout: 10m
+  script:
+    - |
+      if node -e "const pkg=require('./package.json'); process.exit(pkg.scripts?.format ? 0 : 1)"; then
+        pnpm format
+      else
+        echo 'No format script; skipping.'
+      fi
+
+verify:lint:
+  stage: verify
+  extends: .pnpm-job
+  timeout: 10m
+  script:
+    - |
+      if node -e "const pkg=require('./package.json'); process.exit(pkg.scripts?.lint ? 0 : 1)"; then
+        pnpm lint
+      else
+        echo 'No lint script; skipping.'
+      fi
+
+verify:typecheck:
+  stage: verify
+  extends: .pnpm-job
+  timeout: 10m
+  script:
+    - |
+      if node -e "const pkg=require('./package.json'); process.exit(pkg.scripts?.typecheck ? 0 : 1)"; then
+        pnpm typecheck
+      else
+        echo 'No typecheck script; skipping.'
+      fi
+
+build:app:
+  stage: build
+  extends: .pnpm-job
+  timeout: 15m
+  script:
+    - |
+      if node -e "const pkg=require('./package.json'); process.exit(pkg.scripts?.build ? 0 : 1)"; then
+        pnpm build
+      else
+        echo 'No build script; skipping.'
+      fi
+
+dependency:audit:
+  stage: security
+  extends: .pnpm-job
+  allow_failure: true
+  timeout: 10m
+  needs: []
+  script:
+    - pnpm audit --prod --audit-level=high
+
+secret:scan:
+  stage: security
+  image:
+    name: zricethezav/gitleaks:v8.28.0
+    entrypoint: ['']
+  allow_failure: true
+  timeout: 5m
+  needs: []
+  script:
+    - gitleaks detect --source . --no-banner --redact
+
+dast:
+  allow_failure: true
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+      when: manual
+      allow_failure: true
+    - when: never

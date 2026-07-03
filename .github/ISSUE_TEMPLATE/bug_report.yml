@@ -1,0 +1,89 @@
+name: Bug report
+description: Report a defect or regression in this project.
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug. Please search existing issues first to avoid duplicates.
+
+        **Do not report security vulnerabilities here.** Follow SECURITY.md for private disclosure.
+
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Release tag, package version, or commit SHA where you observed the bug.
+      placeholder: "e.g. 0.1.0 or commit abc1234"
+    validations:
+      required: true
+
+  - type: input
+    id: component
+    attributes:
+      label: Component/area
+      description: Which part of the project is affected?
+      placeholder: "e.g. SDK, primitive, starter app, CLI, docs, package build"
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: A clear and concise description of the bug, including any error messages.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What did you expect to happen instead?
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: Minimal steps, code snippet, or repository link that reproduces the issue.
+      placeholder: |
+        1. ...
+        2. ...
+        3. ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, runtime versions, package manager, and bundler if relevant.
+      placeholder: |
+        - OS: macOS 15.0
+        - Node: 22.x
+        - Package manager: pnpm 10.x
+        - Other: ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs/output
+      description: Paste relevant logs, stack traces, or screenshots. Redact secrets, tokens, customer data, private URLs, and personal data.
+      render: shell
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I searched existing issues and confirmed this is not a duplicate.
+          required: true
+        - label: This is not a security vulnerability.
+          required: true
+        - label: I have redacted all secrets, tokens, customer data, private URLs, and personal data.
+          required: true

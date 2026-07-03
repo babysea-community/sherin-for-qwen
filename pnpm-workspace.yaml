@@ -1,0 +1,74 @@
+packages:
+  - .
+
+minimumReleaseAge: 0
+
+catalog:
+  '@aws-sdk/client-s3': 3.1074.0
+  '@eslint/js': 10.0.1
+  '@next/eslint-plugin-next': 16.2.9
+  '@radix-ui/react-label': 2.1.8
+  '@radix-ui/react-select': 2.2.6
+  '@radix-ui/react-slot': 1.2.4
+  '@sentry/nextjs': 10.40.0
+  '@supabase/ssr': 0.8.0
+  '@supabase/supabase-js': 2.97.0
+  '@tailwindcss/postcss': 4.3.1
+  '@types/node': 25.3.1
+  '@types/react': 19.2.14
+  '@types/react-dom': 19.2.3
+  '@vercel/blob': 2.4.1
+  babysea: 2.0.0
+  babel-plugin-react-compiler: 1.0.0
+  class-variance-authority: 0.7.1
+  clsx: 2.1.1
+  eslint: 10.5.0
+  eslint-config-next: 16.2.9
+  globals: 17.7.0
+  lucide-react: 1.22.0
+  next: 16.2.6
+  prettier: 3.9.4
+  react: 19.2.7
+  react-dom: 19.2.7
+  semantic-lady: 0.6.1
+  server-only: 0.0.1
+  simple-icons: 16.21.0
+  sonner: 2.0.7
+  supabase: 2.108.0
+  tailwind-merge: 3.6.0
+  tailwindcss: 4.3.0
+  typescript: 6.0.3
+  typescript-eslint: 8.62.0
+  vitest: 4.1.9
+  zod: 4.4.3
+
+overrides:
+  '@babel/core': 7.29.7
+  '@opentelemetry/core': 2.8.0
+  brace-expansion: 5.0.6
+  esbuild: 0.28.1
+  ip-address: 10.1.1
+  postcss: 8.5.10
+  tar: 7.5.16
+  undici: 6.27.0
+  vite: 7.3.5
+  ws: 8.21.0
+
+peerDependencyRules:
+  allowedVersions:
+    eslint: 10.5.0
+
+onlyBuiltDependencies:
+  - '@sentry/cli'
+  - '@tailwindcss/oxide'
+  - esbuild
+  - sharp
+  - supabase
+  - unrs-resolver
+
+allowBuilds:
+  '@sentry/cli': true
+  esbuild: true
+  sharp: true
+  supabase: true
+  unrs-resolver: true

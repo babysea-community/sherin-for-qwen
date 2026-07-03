@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: sherin
+    runtime: node
+    autoDeploy: false
+    buildCommand: corepack enable && pnpm install --frozen-lockfile && pnpm build
+    startCommand: pnpm start -- -p $PORT
+    envVars:
+      - key: NEXT_PUBLIC_SITE_URL
+        sync: false
+      - key: OWNER_EMAIL
+        sync: false
+      - key: NEXT_PUBLIC_SUPABASE_URL
+        sync: false
+      - key: NEXT_PUBLIC_SUPABASE_PUBLIC_KEY
+        sync: false
+      - key: SUPABASE_SECRET_KEY
+        sync: false
+      - key: INFERENCE_PROVIDER
+        value: alibaba-cloud
+      - key: DASHSCOPE_API_KEY
+        sync: false
+      - key: STORAGE_PROVIDER
+        value: supabase-storage
+      - key: CUSTOM_USER_STORAGE_QUOTA_GB
+        value: '10'

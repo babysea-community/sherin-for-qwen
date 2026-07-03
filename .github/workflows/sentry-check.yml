@@ -1,0 +1,56 @@
+name: Sentry Project Check
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '45 3 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  sentry:
+    name: Sentry project wiring
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - name: Validate Sentry checker script
+        run: |
+          if [[ ! -f scripts/sentry-project-check.mjs ]]; then
+            echo "::notice::No scripts/sentry-project-check.mjs found; skipping Sentry checker validation."
+            exit 0
+          fi
+
+          node --check scripts/sentry-project-check.mjs
+      - name: Verify Sentry project wiring
+        if: ${{ github.event_name != 'pull_request' }}
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+          SENTRY_ALLOW_PERMISSION_SKIP: '1'
+          SENTRY_EXPECTED_PLATFORM: ${{ vars.SENTRY_EXPECTED_PLATFORM || 'other' }}
+          SENTRY_STRICT_OWNERSHIP: ${{ vars.SENTRY_STRICT_OWNERSHIP || '1' }}
+        run: |
+          if [[ ! -f scripts/sentry-project-check.mjs ]]; then
+            echo "::notice::No scripts/sentry-project-check.mjs found; skipping Sentry project check."
+            exit 0
+          fi
+
+          if [[ -z "$SENTRY_AUTH_TOKEN" || -z "$SENTRY_ORG" || -z "$SENTRY_PROJECT" ]]; then
+            echo "::notice::Sentry project check skipped; configure SENTRY_ORG, SENTRY_PROJECT, and SENTRY_AUTH_TOKEN to enable it."
+            exit 0
+          fi
+
+          node scripts/sentry-project-check.mjs
+      - name: Skip Sentry secret on pull requests
+        if: ${{ github.event_name == 'pull_request' }}
+        run: echo "Sentry secrets are not used during pull_request runs; push, scheduled, and manual checks verify project wiring."

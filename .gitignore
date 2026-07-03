@@ -1,0 +1,16 @@
+.env
+.env.*
+!.env.example
+.sentryclirc
+.sentryclirc.*
+!next-env.d.ts
+.next
+node_modules
+dist
+*.tsbuildinfo
+.vercel
+.env*.local
+supabase/.temp
+.wrangler
+.open-next
+cloudflare-env.d.ts

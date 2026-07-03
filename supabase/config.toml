@@ -1,0 +1,36 @@
+project_id = "sherin"
+
+[api]
+port = 54341
+schemas = ["public", "storage", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54342
+major_version = 17
+
+[studio]
+port = 54343
+
+[local_smtp]
+port = 54344
+smtp_port = 54345
+pop3_port = 54346
+
+[storage]
+file_size_limit = "50MiB"
+
+[auth]
+site_url = "http://localhost:3011"
+additional_redirect_urls = ["http://localhost:3011/auth/callback"]
+jwt_expiry = 3600
+enable_signup = true
+
+[auth.email]
+enable_signup = false
+double_confirm_changes = false
+enable_confirmations = false
+
+[analytics]
+enabled = false

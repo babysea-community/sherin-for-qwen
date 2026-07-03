@@ -1,0 +1,54 @@
+name: Feature request
+description: Propose a new capability or improvement.
+title: "[Feature]: "
+labels: ["enhancement", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the suggestion. Please search existing issues first, and read README.md to confirm this fits the project's documented scope.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What problem are you trying to solve? Who is affected and how often does it come up?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: How would you like this to work? Include API sketches, data-contract changes, UX notes, or deployment details if relevant.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Other approaches you weighed and why you ruled them out.
+
+  - type: input
+    id: component
+    attributes:
+      label: Component/area
+      description: Which part of the project would this touch?
+      placeholder: "e.g. SDK, primitive, starter app, CLI, docs, CI"
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Links, references, prior art, related issues, or any other supporting information.
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I searched existing issues and confirmed this is not a duplicate.
+          required: true
+        - label: This request is within the project's documented scope (see README.md).
+          required: true

@@ -1,0 +1,90 @@
+{
+  "name": "sherin-for-qwen",
+  "version": "0.1.0",
+  "description": "Private workspace for generative media with own key, domain, and storage.",
+  "private": true,
+  "license": "Apache-2.0",
+  "homepage": "https://sherin-for-qwen.babysea.live",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/babysea-community/sherin-for-qwen.git"
+  },
+  "keywords": [
+    "babysea",
+    "open-source",
+    "ai-infrastructure",
+    "control-plane",
+    "execution-layer",
+    "inference-providers",
+    "developer-tools",
+    "creative-tools",
+    "generative-ai",
+    "generative-media"
+  ],
+  "engines": {
+    "node": ">=24.14.0 <25"
+  },
+  "scripts": {
+    "build": "next build",
+    "clean": "git clean -xdf .next .turbo node_modules",
+    "dev": "next dev --port=3011",
+    "doctor": "node scripts/doctor.mjs",
+    "sentry:check": "node scripts/sentry-project-check.mjs",
+    "format": "prettier --check \"**/*.{ts,tsx,css,md,json,mjs}\"",
+    "format:fix": "prettier --write \"**/*.{ts,tsx,css,md,json,mjs}\"",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "start": "next start",
+    "supabase": "supabase",
+    "supabase:link": "supabase link --project-ref $SUPABASE_PROJECT_REF",
+    "supabase:push": "supabase db push",
+    "supabase:typegen": "supabase gen types typescript --project-id $SUPABASE_PROJECT_REF --schema public > ./lib/database.types.ts",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@radix-ui/react-label": "catalog:",
+    "@radix-ui/react-select": "catalog:",
+    "@radix-ui/react-slot": "catalog:",
+    "@sentry/nextjs": "catalog:",
+    "@supabase/ssr": "catalog:",
+    "@supabase/supabase-js": "catalog:",
+    "babysea": "catalog:",
+    "class-variance-authority": "catalog:",
+    "clsx": "catalog:",
+    "lucide-react": "catalog:",
+    "next": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "semantic-lady": "catalog:",
+    "server-only": "catalog:",
+    "simple-icons": "catalog:",
+    "sonner": "catalog:",
+    "tailwind-merge": "catalog:",
+    "zod": "catalog:"
+  },
+  "optionalDependencies": {
+    "@aws-sdk/client-s3": "catalog:",
+    "@vercel/blob": "catalog:"
+  },
+  "devDependencies": {
+    "@eslint/js": "catalog:",
+    "@next/eslint-plugin-next": "catalog:",
+    "@tailwindcss/postcss": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "babel-plugin-react-compiler": "catalog:",
+    "eslint": "catalog:",
+    "eslint-config-next": "catalog:",
+    "globals": "catalog:",
+    "prettier": "catalog:",
+    "supabase": "catalog:",
+    "tailwindcss": "catalog:",
+    "typescript": "catalog:",
+    "typescript-eslint": "catalog:",
+    "vitest": "catalog:"
+  },
+  "packageManager": "pnpm@11.7.0"
+}

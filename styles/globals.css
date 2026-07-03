@@ -1,0 +1,51 @@
+@import 'tailwindcss';
+
+@source '../{app,components,lib}/**/*.{ts,tsx}';
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  min-height: 100vh;
+  background:
+    linear-gradient(180deg, rgba(148, 163, 184, 0.06), transparent 28rem),
+    #020617;
+  color: #f8fafc;
+  font-feature-settings:
+    'rlig' 1,
+    'calt' 1;
+}
+
+html {
+  overflow-y: scroll;
+  scrollbar-gutter: stable;
+}
+
+html body[data-scroll-locked],
+html body.with-scroll-bars-hidden {
+  overflow-y: scroll !important;
+  margin-right: 0 !important;
+  padding-right: 0 !important;
+}
+
+html .right-scroll-bar-position {
+  right: 0 !important;
+}
+
+html .width-before-scroll-bar {
+  margin-right: 0 !important;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+input,
+select,
+textarea {
+  color-scheme: dark;
+}

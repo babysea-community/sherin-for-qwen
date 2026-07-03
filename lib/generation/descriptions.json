@@ -1,0 +1,30 @@
+{
+  "fields": {
+    "generation_prompt": "Text description of the content you want to generate",
+    "generation_ratio": "Aspect ratio of the generated content",
+    "generation_resolution": "Resolution tier affects pricing",
+    "generation_output_format": "Format of the output file",
+    "generation_output_number": "Number of outputs to generate",
+    "generation_duration": "Video duration in seconds",
+    "generation_input_file": "Input media files to transform or use as reference",
+    "generation_input_image_file": "Input images to transform or use as reference",
+    "generation_input_video_file": "Input videos to transform or use as reference",
+    "generation_provider_order": "Execution policy for provider ordering",
+    "generation_moderation": "Content moderation",
+    "generation_enhance_prompt": "Prompt enhancement mode",
+    "generation_guidance_scale": "Classifier-free guidance scale",
+    "generation_num_inference_steps": "Number of denoising steps",
+    "generation_output_quality": "Quality when saving output",
+    "generation_seed": "Random seed for reproducible generation",
+    "byok_width": "Output width in pixels",
+    "byok_height": "Output height in pixels",
+    "byok_image_prompt": "(Base64) Input images to transform or use as reference",
+    "byok_image_input_urls": "Input images to transform or use as reference",
+    "byok_seed": "Random seed for reproducible generation",
+    "byok_safety_tolerance": "Higher values are more permissive",
+    "byok_prompt_upsampling": "Prompt enhancement mode",
+    "byok_guidance_scale": "Classifier-free guidance scale",
+    "byok_num_inference_steps": "Number of denoising steps",
+    "byok_raw": "Less processed output mode"
+  }
+}

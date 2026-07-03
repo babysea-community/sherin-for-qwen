@@ -1,0 +1,83 @@
+name: CodeQL
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '31 3 * * 1'
+
+permissions:
+  security-events: write
+  packages: read
+  actions: read
+  contents: read
+
+jobs:
+  detect-languages:
+    name: Detect languages
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      javascript: ${{ steps.detect.outputs.javascript }}
+      python: ${{ steps.detect.outputs.python }}
+    steps:
+      - uses: actions/checkout@v6
+      - id: detect
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if find . \
+            \( -path './.git' -o -path './node_modules' -o -path './dist' -o -path './build' -o -path './.next' -o -path './.turbo' -o -path './.pnpm-store' \) -prune -o \
+            -type f \( -name '*.js' -o -name '*.jsx' -o -name '*.ts' -o -name '*.tsx' -o -name '*.mjs' -o -name '*.cjs' \) -print -quit | grep -q .; then
+            echo 'javascript=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'javascript=false' >> "$GITHUB_OUTPUT"
+          fi
+
+          if find . \
+            \( -path './.git' -o -path './node_modules' -o -path './dist' -o -path './build' -o -path './.next' -o -path './.turbo' -o -path './.pnpm-store' -o -path './.venv' -o -path './.tox' -o -path './*.egg-info' \) -prune -o \
+            -type f -name '*.py' -print -quit | grep -q .; then
+            echo 'python=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'python=false' >> "$GITHUB_OUTPUT"
+          fi
+
+  analyze-javascript:
+    name: Analyze (javascript-typescript)
+    needs: detect-languages
+    if: ${{ needs.detect-languages.outputs.javascript == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: github/codeql-action/init@v4
+        with:
+          languages: javascript-typescript
+          build-mode: none
+
+      - uses: github/codeql-action/analyze@v4
+        with:
+          category: /language:javascript-typescript
+
+  analyze-python:
+    name: Analyze (python)
+    needs: detect-languages
+    if: ${{ needs.detect-languages.outputs.python == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: github/codeql-action/init@v4
+        with:
+          languages: python
+          build-mode: none
+
+      - uses: github/codeql-action/analyze@v4
+        with:
+          category: /language:python

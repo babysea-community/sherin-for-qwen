@@ -1,0 +1,197 @@
+name: Package Check
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+env:
+  PNPM_VERSION: '11.7.0'
+  PNPM_CONFIG_MINIMUM_RELEASE_AGE: '0'
+
+jobs:
+  javascript:
+    name: JavaScript/TypeScript package
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - name: Detect, install, and check JavaScript/TypeScript package
+        shell: bash
+        run: |
+          set -euo pipefail
+          root_dir="$PWD"
+          js_dir="${JS_PACKAGE_DIR:-}"
+
+          if [[ -z "$js_dir" ]]; then
+            if [[ -f package.json ]]; then
+              js_dir="."
+            elif [[ -f client/typescript/package.json ]]; then
+              js_dir="client/typescript"
+            fi
+          fi
+
+          if [[ -z "$js_dir" ]]; then
+            echo "::notice::No JavaScript/TypeScript package found; skipping."
+            exit 0
+          fi
+
+          if [[ ! -f "$js_dir/package.json" ]]; then
+            echo "JS_PACKAGE_DIR=$js_dir does not contain package.json" >&2
+            exit 1
+          fi
+
+          cd "$js_dir"
+          corepack enable
+
+          if [[ -f pnpm-lock.yaml ]]; then
+            corepack prepare "pnpm@${PNPM_VERSION:-10.19.0}" --activate
+            pnpm config set store-dir "$root_dir/.pnpm-store"
+            pnpm install --frozen-lockfile ${PNPM_INSTALL_FLAGS:-}
+            package_manager=pnpm
+          elif [[ -f package-lock.json ]]; then
+            npm ci --cache "$root_dir/.npm" --prefer-offline ${NPM_CI_FLAGS:-}
+            package_manager=npm
+          elif [[ -f yarn.lock ]]; then
+            yarn install --immutable || yarn install --frozen-lockfile
+            package_manager=yarn
+          else
+            corepack prepare "pnpm@${PNPM_VERSION:-10.19.0}" --activate
+            pnpm config set store-dir "$root_dir/.pnpm-store"
+            pnpm install ${PNPM_INSTALL_FLAGS:-}
+            package_manager=pnpm
+          fi
+
+          has_script() {
+            node -e "const pkg=require('./package.json'); process.exit(pkg.scripts?.[process.argv[1]] ? 0 : 1)" "$1"
+          }
+
+          run_script() {
+            local script_name="$1"
+            if has_script "$script_name"; then
+              if [[ "$package_manager" == yarn ]]; then yarn "$script_name"; else "$package_manager" run "$script_name"; fi
+            else
+              echo "::notice::No $script_name script; skipping."
+            fi
+          }
+
+          if has_script check; then
+            run_script check
+          else
+            run_script format
+            run_script lint
+            run_script typecheck
+            run_script test
+            run_script build
+          fi
+
+          if node -e "const pkg=require('./package.json'); process.exit(pkg.private ? 1 : 0)"; then
+            npm pack --dry-run
+          else
+            echo "::notice::Package is private; skipping npm pack dry-run."
+          fi
+
+  python:
+    name: Python package
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Detect, install, and check Python package
+        shell: bash
+        run: |
+          set -euo pipefail
+          python_dir="${PYTHON_PACKAGE_DIR:-}"
+
+          if [[ -z "$python_dir" ]]; then
+            if [[ -f client/python/pyproject.toml || -f client/python/requirements.txt || -f client/python/requirements-dev.txt ]]; then
+              python_dir="client/python"
+            elif [[ -f pyproject.toml || -f requirements.txt || -f requirements-dev.txt ]]; then
+              python_dir="."
+            fi
+          fi
+
+          if [[ -z "$python_dir" ]]; then
+            echo "::notice::No Python package found; skipping."
+            exit 0
+          fi
+
+          cd "$python_dir"
+          python -m pip install --upgrade pip
+
+          if [[ -f pyproject.toml ]]; then
+            python -m pip install -e "${PIP_INSTALL_EXTRAS:-.[dev]}" || python -m pip install -e .
+          elif [[ -f requirements-dev.txt ]]; then
+            python -m pip install -r requirements-dev.txt
+          elif [[ -f requirements.txt ]]; then
+            python -m pip install -r requirements.txt
+          fi
+
+          python -m compileall .
+          if python -c 'import ruff' >/dev/null 2>&1; then python -m ruff check .; else echo 'ruff is not installed; skipping.'; fi
+          if python -c 'import pyright' >/dev/null 2>&1; then python -m pyright; else echo 'pyright is not installed; skipping.'; fi
+
+          test_dir=''
+          for candidate in tests test tests/python ../tests/python ../../tests/python; do
+            if [[ -d "$candidate" ]]; then test_dir="$candidate"; break; fi
+          done
+          if [[ -n "$test_dir" ]] && python -c 'import pytest' >/dev/null 2>&1; then
+            python -m pytest "$test_dir"
+          else
+            echo 'No Python tests or pytest is unavailable; skipping.'
+          fi
+
+          if [[ -f pyproject.toml ]]; then
+            python -m pip install build
+            python -m build --sdist --wheel
+          else
+            echo 'No pyproject.toml; skipping Python package build.'
+          fi
+
+  audit:
+    name: Dependency audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - name: Audit JavaScript/TypeScript production dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          js_dir="${JS_PACKAGE_DIR:-}"
+          if [[ -z "$js_dir" ]]; then
+            if [[ -f package.json ]]; then js_dir="."; elif [[ -f client/typescript/package.json ]]; then js_dir="client/typescript"; fi
+          fi
+          if [[ -z "$js_dir" ]]; then echo 'No JavaScript/TypeScript package found; skipping audit.'; exit 0; fi
+          cd "$js_dir"
+          corepack enable
+          if [[ -f pnpm-lock.yaml ]]; then
+            corepack prepare "pnpm@${PNPM_VERSION:-10.19.0}" --activate
+            pnpm install --frozen-lockfile ${PNPM_INSTALL_FLAGS:-}
+            pnpm audit --prod --audit-level=high
+          elif [[ -f package-lock.json ]]; then
+            npm ci ${NPM_CI_FLAGS:-}
+            npm audit --omit=dev --audit-level=high
+          elif [[ -f yarn.lock ]]; then
+            yarn install --immutable || yarn install --frozen-lockfile
+            yarn npm audit --environment production --severity high || echo 'Yarn audit unavailable or returned findings; review dependency updates manually.'
+          else
+            npm install
+            npm audit --omit=dev --audit-level=high
+          fi

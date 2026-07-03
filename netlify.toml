@@ -1,0 +1,24 @@
+[build]
+  command = "pnpm run build"
+  publish = ".next"
+
+[template.environment]
+  NEXT_PUBLIC_SITE_URL = "Required. The exact URL where app runs, for example https://<your_domain>."
+  OWNER_EMAIL = "Required. The one Google email allowed to access the dashboard."
+  NEXT_PUBLIC_SUPABASE_URL = "Required. Your Supabase project URL."
+  NEXT_PUBLIC_SUPABASE_PUBLIC_KEY = "Required. Your Supabase publishable or anon key."
+  SUPABASE_SECRET_KEY = "Required. Your Supabase service role key. Keep it server-only."
+  INFERENCE_PROVIDER = "Required. Inference provider: alibaba-cloud or babysea. Default alibaba-cloud."
+  DASHSCOPE_API_KEY = "Required when INFERENCE_PROVIDER=alibaba-cloud. Your Alibaba Cloud API key."
+  STORAGE_PROVIDER = "Required. Storage provider: aws-s3, backblaze-b2, cloudflare-r2, supabase-storage, or vercel-blob. Default supabase-storage."
+  CUSTOM_USER_STORAGE_QUOTA_GB = "Required. Per-owner stored image quota in GB. Default 10."
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Scheduled Function: drain the generation queue every 5 minutes so queued or
+# running generations advance even when no owner browser is open. Runs on the
+# Netlify free plan. Requires CRON_SECRET in the Netlify site environment
+# (Functions scope).
+[functions."process-generations"]
+  schedule = "*/5 * * * *"
