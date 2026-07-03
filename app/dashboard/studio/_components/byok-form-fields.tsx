@@ -118,13 +118,32 @@ function renderSchemaField(
     field.name === 'generation_size' ||
     field.name === 'generation_aspect_ratio'
   ) {
+    const options = fieldStringEnum(field, []);
+
+    // Enum sizing (aspect ratio / fixed size list) renders as a dropdown; a
+    // free-form size (e.g. Qwen "1024*1024") renders as a text input so the
+    // user can enter any supported dimensions. This mirrors babychain, which
+    // picks the control from the field type instead of forcing a dropdown.
+    if (options.length > 0) {
+      return (
+        <RatioField
+          defaultRatio={fieldStringDefault(field) ?? context.defaultRatio}
+          description={description}
+          label={label}
+          ratioOptions={options}
+        />
+      );
+    }
+
     return (
-      <RatioField
-        defaultRatio={fieldStringDefault(field) ?? context.defaultRatio}
-        description={description}
-        label={label}
-        ratioOptions={fieldStringEnum(field, context.ratioOptions)}
-      />
+      <Field label={label} description={description}>
+        <Input
+          name="ratio"
+          required={field.required}
+          defaultValue={fieldStringDefault(field) ?? context.defaultRatio}
+          placeholder={field.placeholder ?? 'e.g. 1024*1024'}
+        />
+      </Field>
     );
   }
 
@@ -196,25 +215,6 @@ function SchemaField({
   label: string;
   description?: string;
 }) {
-  if (field.name === 'generation_duration' && field.type === 'integer') {
-    const options = durationOptions(field);
-
-    if (options.length > 0) {
-      return (
-        <Field label={label} description={description}>
-          <Select
-            name={field.name}
-            defaultValue={durationDefaultValue(field)}
-            options={options}
-            placeholder={
-              field.required ? 'Select duration' : 'Provider default'
-            }
-          />
-        </Field>
-      );
-    }
-  }
-
   if (field.type === 'boolean') {
     return (
       <Field label={label} description={description}>
@@ -297,30 +297,4 @@ function fieldNumberDefault(field: SemanticLadyField) {
 
 function fieldBooleanDefault(field: SemanticLadyField) {
   return typeof field.default === 'boolean' ? String(field.default) : undefined;
-}
-
-function durationOptions(field: SemanticLadyField) {
-  const min = typeof field.min === 'number' ? field.min : 2;
-  const max = typeof field.max === 'number' ? field.max : 10;
-
-  if (!Number.isInteger(min) || !Number.isInteger(max) || min > max) {
-    return [];
-  }
-
-  return Array.from({ length: max - min + 1 }, (_, index) => {
-    const value = String(min + index);
-
-    return { value, label: `${value} seconds` };
-  });
-}
-
-function durationDefaultValue(field: SemanticLadyField) {
-  if (!field.required) {
-    return undefined;
-  }
-
-  const min = typeof field.min === 'number' ? field.min : 2;
-  const max = typeof field.max === 'number' ? field.max : 10;
-
-  return String(Math.min(Math.max(5, min), max));
 }

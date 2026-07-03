@@ -16,7 +16,6 @@ import { getStorageProviderStatus } from '@/lib/storage';
 import { resolveAssetUrl } from '@/lib/storage/asset-url';
 import { getUser } from '@/lib/database/server-actions';
 import { getGenerationRequestSnapshot } from '@/lib/generation/display';
-import { InlineAlibabaCloud } from '@/components/icons/inline-inference';
 import {
   InlineHappyHorseLight,
   InlineQwen,
@@ -392,7 +391,7 @@ function modelVendorIcon(modelId: string) {
     return InlineZImage;
   }
 
-  return InlineAlibabaCloud;
+  return InlineQwen;
 }
 
 function InsightCard({

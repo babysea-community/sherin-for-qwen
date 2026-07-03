@@ -17,7 +17,6 @@ import {
   InlineRenderLight,
   InlineVercelLight,
 } from '@/components/icons/inline-host';
-import { InlineAlibabaCloud } from '@/components/icons/inline-inference';
 import {
   InlineHappyHorseLight,
   InlineQwen,
@@ -91,7 +90,7 @@ function modelVendorIcon(modelId: string) {
     return InlineZImage;
   }
 
-  return InlineAlibabaCloud;
+  return InlineQwen;
 }
 
 const supportedModels = MODEL_OPTIONS.map((model) => ({

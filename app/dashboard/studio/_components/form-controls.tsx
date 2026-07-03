@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 
-import { InlineAlibabaCloud } from '@/components/icons/inline-inference';
 import {
   InlineHappyHorseLight,
   InlineQwen,
@@ -206,7 +205,7 @@ function modelVendorIcon(modelId: string) {
     return InlineZImage;
   }
 
-  return InlineAlibabaCloud;
+  return InlineQwen;
 }
 
 export function RatioField({
