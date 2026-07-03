@@ -7,7 +7,7 @@ catalog:
   '@aws-sdk/client-s3': 3.1074.0
   '@eslint/js': 10.0.1
   '@next/eslint-plugin-next': 16.2.9
-  '@radix-ui/react-label': 2.1.8
+  '@radix-ui/react-label': 2.1.11
   '@radix-ui/react-select': 2.2.6
   '@radix-ui/react-slot': 1.2.4
   '@sentry/nextjs': 10.40.0
