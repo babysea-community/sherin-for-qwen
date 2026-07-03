@@ -2,8 +2,9 @@
 
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 
+import { InlineAlibabaCloud } from '@/components/icons/inline-inference';
 import {
-  InlineHappyHorse,
+  InlineHappyHorseLight,
   InlineQwen,
   InlineWan,
   InlineZImage,
@@ -189,6 +190,10 @@ function ModelVendorIcon({ modelId }: { modelId: string }) {
 }
 
 function modelVendorIcon(modelId: string) {
+  if (modelId.startsWith('happyhorse/')) {
+    return InlineHappyHorseLight;
+  }
+
   if (modelId.startsWith('qwen/')) {
     return InlineQwen;
   }
@@ -197,15 +202,11 @@ function modelVendorIcon(modelId: string) {
     return InlineWan;
   }
 
-  if (modelId.startsWith('happyhorse/')) {
-    return InlineHappyHorse;
-  }
-
   if (modelId.startsWith('z/')) {
     return InlineZImage;
   }
 
-  return null;
+  return InlineAlibabaCloud;
 }
 
 export function RatioField({

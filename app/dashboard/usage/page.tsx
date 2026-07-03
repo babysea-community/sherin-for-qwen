@@ -18,6 +18,12 @@ import { getUser } from '@/lib/database/server-actions';
 import { getGenerationRequestSnapshot } from '@/lib/generation/display';
 import { InlineAlibabaCloud } from '@/components/icons/inline-inference';
 import {
+  InlineHappyHorseLight,
+  InlineQwen,
+  InlineWan,
+  InlineZImage,
+} from '@/components/icons/inline-model';
+import {
   InlineAwsS3,
   InlineBackblazeB2,
   InlineCloudflareR2,
@@ -359,16 +365,34 @@ function UsageKpiCard({
 }
 
 function FavoriteModelValue({ model }: { model: string }) {
-  const hasModel = model !== 'No outputs yet';
+  const Icon = modelVendorIcon(model);
 
   return (
     <span className="inline-flex w-full max-w-full min-w-0 items-center gap-3">
-      {hasModel ? (
-        <InlineAlibabaCloud className="h-5 w-7 shrink-0" aria-hidden="true" />
-      ) : null}
+      {Icon ? <Icon className="size-5 shrink-0" aria-hidden="true" /> : null}
       <span className="block min-w-0 truncate">{model}</span>
     </span>
   );
+}
+
+function modelVendorIcon(modelId: string) {
+  if (modelId.startsWith('happyhorse/')) {
+    return InlineHappyHorseLight;
+  }
+
+  if (modelId.startsWith('qwen/')) {
+    return InlineQwen;
+  }
+
+  if (modelId.startsWith('wan/')) {
+    return InlineWan;
+  }
+
+  if (modelId.startsWith('z/')) {
+    return InlineZImage;
+  }
+
+  return InlineAlibabaCloud;
 }
 
 function InsightCard({

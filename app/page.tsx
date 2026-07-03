@@ -75,16 +75,16 @@ type StackItem = {
 };
 
 function modelVendorIcon(modelId: string) {
+  if (modelId.startsWith('happyhorse/')) {
+    return InlineHappyHorseLight;
+  }
+
   if (modelId.startsWith('qwen/')) {
     return InlineQwen;
   }
 
   if (modelId.startsWith('wan/')) {
     return InlineWan;
-  }
-
-  if (modelId.startsWith('happyhorse/')) {
-    return InlineHappyHorseLight;
   }
 
   if (modelId.startsWith('z/')) {

@@ -6,4 +6,4 @@ All notable changes will be documented here. The format follows [Keep a Changelo
 
 ## [0.1.0] - 2026-07-03 - INITIAL RELEASED
 
-- Implement Qwen, Wan, HappyHorse models.
+- Implement Qwen, Wan, HappyHorse, and Z models.

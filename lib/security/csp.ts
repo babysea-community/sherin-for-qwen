@@ -43,7 +43,7 @@ function buildContentSecurityPolicy() {
     'https://api.us.babysea.ai', // us-region
     'https://api.eu.babysea.ai', // eu-region
     'https://api.jp.babysea.ai', // apac-region
-    'https://dashscope-intl.aliyuncs.com', // singapore
+    'https://dashscope-intl.aliyuncs.com', // global
   ]);
   const imageHosts = new Set<string>([
     "'self'",
@@ -52,7 +52,7 @@ function buildContentSecurityPolicy() {
     'https://app.us.babysea.ai', // us-region
     'https://app.eu.babysea.ai', // eu-region
     'https://app.jp.babysea.ai', // apac-region
-    'https://*.aliyuncs.com', // oss results
+    'https://*.aliyuncs.com', // global oss
     'https://lh3.googleusercontent.com', // Google profile photos from Google OAuth
     BABYSEA_CDN_ORIGIN, // app assets
     'https://imagedelivery.net', // app assets

@@ -1,8 +1,9 @@
-import { Fragment } from 'react';
+import { Fragment, type ReactNode } from 'react';
 import type { SemanticLadyField } from 'semantic-lady';
 
 import { DEFAULT_GENERATION_OUTPUT_NUMBER } from '@/lib/app-config';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 
 import {
   Base64ImagePromptField,
@@ -14,7 +15,6 @@ import {
   PromptField,
   RatioField,
   Select,
-  getFieldDescription,
   getFieldLabel,
 } from './form-controls';
 
@@ -30,8 +30,21 @@ type ByokFormFieldsProps = {
   videoInputFileLimit?: number;
 };
 
-const SHERIN_LEVEL_FIELDS = new Set([
-  'generation_output_number',
+type FieldContext = {
+  defaultOutputFormat: string;
+  defaultRatio: string;
+  inputFileLimit: number;
+  outputFormatOptions: string[];
+  ratioOptions: string[];
+  videoInputFileLimit: number;
+};
+
+// The prompt is rendered on its own above the grid; provider order is a
+// Sherin-level control handled elsewhere. Every other field is rendered in the
+// order Semantic Lady already sorts the schema: core fields first (in the
+// canonical CORE_FIELD_ORDER), then advanced fields alphabetically by name.
+const HANDLED_OUTSIDE_GRID = new Set([
+  'generation_prompt',
   'generation_provider_order',
 ]);
 
@@ -47,18 +60,14 @@ export function ByokFormFields({
   videoInputFileLimit = 0,
 }: ByokFormFieldsProps) {
   const promptField = fieldByName(schema, 'generation_prompt');
-  const ratioField = fieldByName(schema, 'generation_aspect_ratio');
-  const outputFormatField = fieldByName(schema, 'generation_output_format');
-  const inputImageField = fieldByName(schema, 'generation_input_image_file');
-  const inputVideoField = fieldByName(schema, 'generation_input_video_file');
-  const remainingFields = schema
-    .filter((field) => !isSpecialField(field.name))
-    .map((field) => ({
-      key: field.name,
-      label: getFieldLabel(field.name),
-      node: <SchemaField field={field} />,
-    }))
-    .sort((left, right) => left.label.localeCompare(right.label));
+  const context: FieldContext = {
+    defaultOutputFormat,
+    defaultRatio,
+    inputFileLimit,
+    outputFormatOptions,
+    ratioOptions,
+    videoInputFileLimit,
+  };
 
   return (
     <div className="space-y-5">
@@ -71,78 +80,122 @@ export function ByokFormFields({
       ) : null}
 
       <div className="grid gap-3 sm:grid-cols-2">
-        {ratioField ? (
-          <RatioField
-            defaultRatio={fieldStringDefault(ratioField) ?? defaultRatio}
-            description={fieldDescription(ratioField)}
-            label={getFieldLabel(ratioField.name)}
-            ratioOptions={fieldStringEnum(ratioField, ratioOptions)}
-          />
-        ) : null}
+        {schema
+          .filter((field) => !HANDLED_OUTSIDE_GRID.has(field.name))
+          .map((field) => {
+            const node = renderSchemaField(field, context);
 
-        {outputFormatField ? (
-          <OutputFormatField
-            defaultOutputFormat={
-              fieldStringDefault(outputFormatField) ?? defaultOutputFormat
-            }
-            description={fieldDescription(outputFormatField)}
-            outputFormatOptions={fieldStringEnum(
-              outputFormatField,
-              outputFormatOptions,
-            )}
-          />
-        ) : null}
-
-        <Field
-          label="Number of outputs"
-          description={getFieldDescription('generation_output_number')}
-        >
-          <Input
-            readOnly
-            name="generation_output_number"
-            type="number"
-            value={DEFAULT_GENERATION_OUTPUT_NUMBER}
-            className="cursor-not-allowed text-slate-300"
-          />
-        </Field>
-
-        {inputImageField && inputFileLimit > 0 ? (
-          <InputImageUrlsField
-            descriptionKey={inputImageField.name}
-            maxUrls={inputFileLimit}
-            name="generation_input_file"
-            required={Boolean(inputImageField.required)}
-          />
-        ) : null}
-
-        {inputImageField && inputFileLimit === 0 ? (
-          <Base64ImagePromptField
-            descriptionKey="byok_image_prompt"
-            name="byok_image_prompt"
-          />
-        ) : null}
-
-        {inputVideoField && videoInputFileLimit > 0 ? (
-          <InputVideoUrlsField
-            descriptionKey={inputVideoField.name}
-            maxUrls={videoInputFileLimit}
-            name="generation_input_video_file"
-            required={Boolean(inputVideoField.required)}
-          />
-        ) : null}
-
-        {remainingFields.map((field) => (
-          <Fragment key={field.key}>{field.node}</Fragment>
-        ))}
+            return node ? <Fragment key={field.name}>{node}</Fragment> : null;
+          })}
       </div>
     </div>
   );
 }
 
-function SchemaField({ field }: { field: SemanticLadyField }) {
+function renderSchemaField(
+  field: SemanticLadyField,
+  context: FieldContext,
+): ReactNode {
   const label = getFieldLabel(field.name);
-  const description = fieldDescription(field);
+  const description = field.description;
 
+  if (field.name === 'generation_negative_prompt') {
+    return (
+      <Field className="sm:col-span-2" label={label} description={description}>
+        <Textarea
+          name={field.name}
+          rows={4}
+          required={field.required}
+          defaultValue={fieldStringDefault(field)}
+          placeholder={field.placeholder ?? 'Optional'}
+          className="min-h-28 resize-y"
+        />
+      </Field>
+    );
+  }
+
+  if (
+    field.name === 'generation_size' ||
+    field.name === 'generation_aspect_ratio'
+  ) {
+    return (
+      <RatioField
+        defaultRatio={fieldStringDefault(field) ?? context.defaultRatio}
+        description={description}
+        label={label}
+        ratioOptions={fieldStringEnum(field, context.ratioOptions)}
+      />
+    );
+  }
+
+  if (field.name === 'generation_output_format') {
+    return (
+      <OutputFormatField
+        defaultOutputFormat={
+          fieldStringDefault(field) ?? context.defaultOutputFormat
+        }
+        description={description}
+        outputFormatOptions={fieldStringEnum(
+          field,
+          context.outputFormatOptions,
+        )}
+      />
+    );
+  }
+
+  if (field.name === 'generation_output_number') {
+    return (
+      <Field label="Number of outputs" description={description}>
+        <Input
+          readOnly
+          name="generation_output_number"
+          type="number"
+          value={DEFAULT_GENERATION_OUTPUT_NUMBER}
+          className="cursor-not-allowed text-slate-300"
+        />
+      </Field>
+    );
+  }
+
+  if (field.name === 'generation_input_image_file') {
+    return context.inputFileLimit > 0 ? (
+      <InputImageUrlsField
+        descriptionKey={field.name}
+        maxUrls={context.inputFileLimit}
+        name="generation_input_file"
+        required={Boolean(field.required)}
+      />
+    ) : (
+      <Base64ImagePromptField
+        descriptionKey="byok_image_prompt"
+        name="byok_image_prompt"
+      />
+    );
+  }
+
+  if (field.name === 'generation_input_video_file') {
+    return context.videoInputFileLimit > 0 ? (
+      <InputVideoUrlsField
+        descriptionKey={field.name}
+        maxUrls={context.videoInputFileLimit}
+        name="generation_input_video_file"
+        required={Boolean(field.required)}
+      />
+    ) : null;
+  }
+
+  return <SchemaField field={field} label={label} description={description} />;
+}
+
+function SchemaField({
+  field,
+  label,
+  description,
+}: {
+  field: SemanticLadyField;
+  label: string;
+  description?: string;
+}) {
   if (field.name === 'generation_duration' && field.type === 'integer') {
     const options = durationOptions(field);
 
@@ -219,29 +272,8 @@ function SchemaField({ field }: { field: SemanticLadyField }) {
   );
 }
 
-function isSpecialField(name: string) {
-  return (
-    SHERIN_LEVEL_FIELDS.has(name) ||
-    name === 'generation_prompt' ||
-    name === 'generation_aspect_ratio' ||
-    name === 'generation_output_format' ||
-    name === 'generation_input_image_file' ||
-    name === 'generation_input_video_file'
-  );
-}
-
 function fieldByName(schema: readonly SemanticLadyField[], name: string) {
   return schema.find((field) => field.name === name);
-}
-
-function fieldDescription(field: SemanticLadyField) {
-  return (
-    getFieldDescription(fieldDescriptionKey(field.name)) ?? field.description
-  );
-}
-
-function fieldDescriptionKey(name: string) {
-  return name === 'generation_aspect_ratio' ? 'generation_ratio' : name;
 }
 
 function fieldStringEnum(
