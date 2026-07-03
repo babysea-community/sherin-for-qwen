@@ -15,7 +15,7 @@ catalog:
   '@supabase/supabase-js': 2.97.0
   '@tailwindcss/postcss': 4.3.1
   '@types/node': 25.3.1
-  '@types/react': 19.2.14
+  '@types/react': 19.2.17
   '@types/react-dom': 19.2.3
   '@vercel/blob': 2.4.1
   babysea: 2.0.0
