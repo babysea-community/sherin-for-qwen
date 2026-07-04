@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import {
+  BYOK_MODEL_CONFIGS,
   GENERATION_PROMPT_PLACEHOLDER,
   MODEL_OPTIONS,
   type SherinModelId,
@@ -151,27 +152,65 @@ export function ModelField({
             aria-label="Model"
             className="absolute left-0 right-0 top-full z-50 mt-2 block max-h-72 overflow-y-auto rounded-xl border border-white/10 bg-slate-950 p-1 text-sm text-slate-100 shadow-2xl"
           >
-            {modelOptions.map((option) => (
-              <button
-                key={option.id}
-                type="button"
-                role="option"
-                aria-selected={option.id === model}
-                className="flex h-10 w-full min-w-0 items-center gap-2 rounded-lg px-2 text-left transition hover:bg-white/10 focus:bg-white/10 focus:outline-none aria-selected:bg-fuchsia-300/10 aria-selected:text-fuchsia-100"
-                onClick={() => {
-                  setOpen(false);
-                  onModelChange(option.id);
-                }}
+            {groupModelOptions(modelOptions).map((group) => (
+              <span
+                key={group.label}
+                role="group"
+                aria-label={group.label}
+                className="block"
               >
-                <ModelVendorIcon modelId={option.id} />
-                <span className="min-w-0 truncate">{option.label}</span>
-              </button>
+                <span className="block px-2 pb-1 pt-2 text-xs font-semibold uppercase tracking-wider text-slate-500">
+                  {group.label}
+                </span>
+                {group.options.map((option) => (
+                  <button
+                    key={option.id}
+                    type="button"
+                    role="option"
+                    aria-selected={option.id === model}
+                    className="flex h-10 w-full min-w-0 items-center gap-2 rounded-lg px-2 text-left transition hover:bg-white/10 focus:bg-white/10 focus:outline-none aria-selected:bg-fuchsia-300/10 aria-selected:text-fuchsia-100"
+                    onClick={() => {
+                      setOpen(false);
+                      onModelChange(option.id);
+                    }}
+                  >
+                    <ModelVendorIcon modelId={option.id} />
+                    <span className="min-w-0 truncate">{option.label}</span>
+                  </button>
+                ))}
+              </span>
             ))}
           </span>
         ) : null}
       </span>
     </div>
   );
+}
+
+const MODEL_LABEL_COLLATOR = new Intl.Collator('en', {
+  ignorePunctuation: true,
+  numeric: true,
+  sensitivity: 'base',
+});
+
+const MODEL_KIND_GROUPS = [
+  { label: 'Image models', kind: 'image' },
+  { label: 'Video models', kind: 'video' },
+] as const;
+
+function groupModelOptions(modelOptions: readonly ModelOption[]) {
+  return MODEL_KIND_GROUPS.map((group) => ({
+    label: group.label,
+    options: modelOptions
+      .filter((option) => modelOptionKind(option.id) === group.kind)
+      .sort((left, right) =>
+        MODEL_LABEL_COLLATOR.compare(left.label, right.label),
+      ),
+  })).filter((group) => group.options.length > 0);
+}
+
+function modelOptionKind(modelId: SherinModelId) {
+  return BYOK_MODEL_CONFIGS[modelId].kind;
 }
 
 function ModelVendorIcon({ modelId }: { modelId: string }) {
@@ -205,7 +244,7 @@ function modelVendorIcon(modelId: string) {
     return InlineZImage;
   }
 
-  return InlineQwen;
+  return null;
 }
 
 export function RatioField({
