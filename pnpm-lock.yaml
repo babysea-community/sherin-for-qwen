@@ -28,8 +28,8 @@ catalogs:
       specifier: 10.40.0
       version: 10.40.0
     '@supabase/ssr':
-      specifier: 0.8.0
-      version: 0.8.0
+      specifier: 0.12.0
+      version: 0.12.0
     '@supabase/supabase-js':
       specifier: 2.97.0
       version: 2.97.0
@@ -148,7 +148,7 @@ importers:
         version: 10.40.0(@opentelemetry/context-async-hooks@2.7.1(@opentelemetry/api@1.9.1))(@opentelemetry/core@2.8.0(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@2.7.1(@opentelemetry/api@1.9.1))(next@16.2.6(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)(webpack@5.106.2(lightningcss@1.32.0))
       '@supabase/ssr':
         specifier: 'catalog:'
-        version: 0.8.0(@supabase/supabase-js@2.97.0)
+        version: 0.12.0(@supabase/supabase-js@2.97.0)
       '@supabase/supabase-js':
         specifier: 'catalog:'
         version: 2.97.0
@@ -1843,10 +1843,10 @@ packages:
     resolution: {integrity: sha512-37Jw0NLaFP0CZd7qCan97D1zWutPrTSpgWxAw6Yok59JZoxp4IIKMrPeftJ3LZHmf+ILQOPy3i0pRDHM9FY36Q==}
     engines: {node: '>=20.0.0'}
 
-  '@supabase/ssr@0.8.0':
-    resolution: {integrity: sha512-/PKk8kNFSs8QvvJ2vOww1mF5/c5W8y42duYtXvkOSe+yZKRgTTZywYG2l41pjhNomqESZCpZtXuWmYjFRMV+dw==}
+  '@supabase/ssr@0.12.0':
+    resolution: {integrity: sha512-d9XV5XzJvzzZbeAIM7fWTCUYxQJZ2Ru6ny3dJHmHGp/LIrJ+o9FpD7N9Rf/UhhWEvHXSoDe8SI32Z2ouOdMjBg==}
     peerDependencies:
-      '@supabase/supabase-js': ^2.76.1
+      '@supabase/supabase-js': ^2.108.0
 
   '@supabase/storage-js@2.97.0':
     resolution: {integrity: sha512-9f6NniSBfuMxOWKwEFb+RjJzkfMdJUwv9oHuFJKfe/5VJR8cd90qw68m6Hn0ImGtwG37TUO+QHtoOechxRJ1Yg==}
@@ -5789,7 +5789,7 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  '@supabase/ssr@0.8.0(@supabase/supabase-js@2.97.0)':
+  '@supabase/ssr@0.12.0(@supabase/supabase-js@2.97.0)':
     dependencies:
       '@supabase/supabase-js': 2.97.0
       cookie: 1.1.1
