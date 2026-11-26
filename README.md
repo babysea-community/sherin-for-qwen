@@ -134,39 +134,39 @@ BabySea model schemas are published at [babysea.ai/model-schema](https://babysea
 
 Use [`.env.example`](.env.example) as the source of truth for storage provider, quota, worker, and monitoring configuration.
 
-Supabase Storage is the default and fallback storage path. AWS S3, Backblaze B2, Cloudflare R2, and Vercel Blob are available when you want generated media in your own bucket or blob store. Leave the Backblaze B2 env values blank unless you intentionally set `STORAGE_PROVIDER=backblaze-b2`.
+Supabase Storage is the default and fallback storage path. AWS S3, Backblaze B2, Cloudflare R2, and Vercel Blob are available when you want generated media in your own bucket or blob store.
 
 ## Supported models
 
-Supported model names and provider fields are registered in [`lib/model-family.ts`](lib/model-family.ts), [`lib/inference/alibaba-cloud/models.ts`](lib/inference/alibaba-cloud/models.ts), and [`lib/inference/babysea/models.ts`](lib/inference/babysea/models.ts).
+The catalog below lists models available through BYOK and/or BabySea, as indicated by their mode options. BYOK requires the corresponding provider key. Model IDs and provider fields are registered in [`lib/model-family.ts`](lib/model-family.ts) and [`lib/inference/alibaba-cloud/family.ts`](lib/inference/alibaba-cloud/family.ts). `BYOK/BabySea` indicates that the model is supported by BabySea, as shown in the [BabySea model schemas](https://babysea.ai/model-schema).
 
-| Model name                        | Model ID                    |
-| :-------------------------------- | :-------------------------- |
-| Qwen Image                        | `qwen/image`                |
-| Qwen Image Plus                   | `qwen/image-plus`           |
-| Qwen Image 2.0                    | `qwen/image-2`              |
-| Qwen Image 2.0 Pro                | `qwen/image-2-pro`          |
-| Qwen Image Max                    | `qwen/image-max`            |
-| Qwen Image Edit                   | `qwen/image-edit`           |
-| Qwen Image Edit Max               | `qwen/image-edit-max`       |
-| Qwen Image Edit Plus              | `qwen/image-edit-plus`      |
-| Wan 2.1 Image Edit                | `wan/2.1-imageedit`         |
-| Wan 2.5 Image-to-Image Preview    | `wan/2.5-i2i-preview`       |
-| Wan 2.6 Image                     | `wan/2.6-image`             |
-| Wan 2.6 Text-to-Image             | `wan/2.6-t2i`               |
-| Wan 2.7 Image                     | `wan/2.7-image`             |
-| Wan 2.7 Image Pro                 | `wan/2.7-image-pro`         |
-| Wan 2.2 Animate Mix               | `wan/2.2-animate-mix`       |
-| Wan 2.2 Animate Move              | `wan/2.2-animate-move`      |
-| Wan 2.7 Image-to-Video            | `wan/2.7-i2v-2026-04-25`    |
-| Wan 2.7 Reference-to-Video        | `wan/2.7-r2v`               |
-| Wan 2.7 Text-to-Video             | `wan/2.7-t2v`               |
-| Wan 2.7 Video Edit                | `wan/2.7-videoedit`         |
-| HappyHorse 1.0 Image-to-Video     | `happyhorse/1.0-i2v`        |
-| HappyHorse 1.0 Reference-to-Video | `happyhorse/1.0-r2v`        |
-| HappyHorse 1.0 Text-to-Video      | `happyhorse/1.0-t2v`        |
-| HappyHorse 1.0 Video Edit         | `happyhorse/1.0-video-edit` |
-| Z Image Turbo                     | `z/image-turbo`             |
+| No  | Inference Providers | Model ID                    | Type  | Mode Options |
+| :-- | :------------------ | :-------------------------- | :---: | :----------- |
+| 1   | Alibaba Cloud       | `qwen/image`                | Image | BYOK/BabySea |
+| 2   | Alibaba Cloud       | `qwen/image-2`              | Image | BYOK/BabySea |
+| 3   | Alibaba Cloud       | `qwen/image-2-pro`          | Image | BYOK/BabySea |
+| 4   | Alibaba Cloud       | `qwen/image-edit`           | Image | BYOK/BabySea |
+| 5   | Alibaba Cloud       | `qwen/image-edit-max`       | Image | BYOK         |
+| 6   | Alibaba Cloud       | `qwen/image-edit-plus`      | Image | BYOK/BabySea |
+| 7   | Alibaba Cloud       | `qwen/image-max`            | Image | BYOK         |
+| 8   | Alibaba Cloud       | `qwen/image-plus`           | Image | BYOK         |
+| 9   | Alibaba Cloud       | `wan/2.1-imageedit`         | Image | BYOK         |
+| 10  | Alibaba Cloud       | `wan/2.5-i2i-preview`       | Image | BYOK         |
+| 11  | Alibaba Cloud       | `wan/2.6-image`             | Image | BYOK         |
+| 12  | Alibaba Cloud       | `wan/2.6-t2i`               | Image | BYOK         |
+| 13  | Alibaba Cloud       | `wan/2.7-image`             | Image | BYOK         |
+| 14  | Alibaba Cloud       | `wan/2.7-image-pro`         | Image | BYOK         |
+| 15  | Alibaba Cloud       | `z/image-turbo`             | Image | BYOK         |
+| 16  | Alibaba Cloud       | `happyhorse/1.0-i2v`        | Video | BYOK         |
+| 17  | Alibaba Cloud       | `happyhorse/1.0-r2v`        | Video | BYOK         |
+| 18  | Alibaba Cloud       | `happyhorse/1.0-t2v`        | Video | BYOK         |
+| 19  | Alibaba Cloud       | `happyhorse/1.0-video-edit` | Video | BYOK         |
+| 20  | Alibaba Cloud       | `wan/2.2-animate-mix`       | Video | BYOK         |
+| 21  | Alibaba Cloud       | `wan/2.2-animate-move`      | Video | BYOK         |
+| 22  | Alibaba Cloud       | `wan/2.7-i2v-2026-04-25`    | Video | BYOK         |
+| 23  | Alibaba Cloud       | `wan/2.7-r2v`               | Video | BYOK         |
+| 24  | Alibaba Cloud       | `wan/2.7-t2v`               | Video | BYOK         |
+| 25  | Alibaba Cloud       | `wan/2.7-videoedit`         | Video | BYOK         |
 
 ## Workspace
 

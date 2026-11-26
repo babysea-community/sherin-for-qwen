@@ -33,7 +33,10 @@ import {
 } from '@/components/icons/inline-storage';
 import { ClientGallery } from '@/components/gallery/client';
 import { DeployDropdown } from '@/components/deploy-dropdown';
-import { InlineNetlify as InlineNetlifySponsor } from '@/components/icons/inline-sponsor';
+import {
+  InlineNetlify as InlineNetlifySponsor,
+  InlineSentry as InlineSentrySponsor,
+} from '@/components/icons/inline-sponsor';
 import { ProtectedImage } from '@/components/protected-image';
 import { MODEL_OPTIONS } from '@/lib/app-config';
 
@@ -417,6 +420,16 @@ function SponsorSection() {
                 className="h-10 w-auto"
                 aria-hidden="true"
               />
+            </a>
+            <a
+              href="https://sentry.io"
+              target="_blank"
+              rel="noreferrer noopener"
+              aria-label="Sentry"
+              title="Sentry"
+              className="inline-flex items-center justify-center rounded-2xl border border-[#20263a] bg-[#0a0f22] px-8 py-5 transition hover:scale-105 hover:border-[#f0abfc33] hover:bg-[#111833]"
+            >
+              <InlineSentrySponsor className="h-10 w-auto" aria-hidden="true" />
             </a>
           </div>
         </div>
