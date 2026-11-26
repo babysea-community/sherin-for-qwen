@@ -33,7 +33,7 @@ export const API_SECURITY_HEADERS = [
 /**
  * Builds app's static CSP from the active deployment environment.
  * App is a single private starter, so a small static policy in next.config
- * keeps the same allowlist discipline without needing middleware nonce
+ * keeps a strict allowlist discipline without needing middleware nonce
  * plumbing. The CSP applies to HTML responses; JSON API responses under
  * /api/* receive Cache-Control headers via API_SECURITY_HEADERS.
  */
