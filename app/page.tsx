@@ -427,9 +427,12 @@ function SponsorSection() {
               rel="noreferrer noopener"
               aria-label="Sentry"
               title="Sentry"
-              className="inline-flex items-center justify-center rounded-2xl border border-[#20263a] bg-[#0a0f22] px-8 py-5 transition hover:scale-105 hover:border-[#f0abfc33] hover:bg-[#111833]"
+              className="inline-flex h-[82px] w-[164px] items-center justify-center rounded-2xl border border-[#20263a] bg-[#0a0f22] px-8 py-5 transition hover:scale-105 hover:border-[#f0abfc33] hover:bg-[#111833]"
             >
-              <InlineSentrySponsor className="h-10 w-auto" aria-hidden="true" />
+              <InlineSentrySponsor
+                className="h-auto w-full"
+                aria-hidden="true"
+              />
             </a>
           </div>
         </div>

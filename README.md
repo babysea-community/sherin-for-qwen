@@ -138,7 +138,7 @@ Supabase Storage is the default and fallback storage path. AWS S3, Backblaze B2,
 
 ## Supported models
 
-The catalog below lists models available through BYOK and/or BabySea, as indicated by their mode options. BYOK requires the corresponding provider key. Model IDs and provider fields are registered in [`lib/model-family.ts`](lib/model-family.ts) and [`lib/inference/alibaba-cloud/family.ts`](lib/inference/alibaba-cloud/family.ts). `BYOK/BabySea` indicates that the model is supported by BabySea, as shown in the [BabySea model schemas](https://babysea.ai/model-schema).
+In the table, `BYOK` means a model is available only through the provider key; `BYOK/BabySea` means the exact model ID is available in both modes. Model IDs and provider fields are registered in [`lib/model-family.ts`](lib/model-family.ts) and [`lib/inference/alibaba-cloud/family.ts`](lib/inference/alibaba-cloud/family.ts). See the [BabySea model schemas](https://babysea.ai/model-schema).
 
 | No  | Inference Providers | Model ID                    | Type  | Mode Options |
 | :-- | :------------------ | :-------------------------- | :---: | :----------- |
