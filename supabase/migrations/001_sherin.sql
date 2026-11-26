@@ -180,6 +180,14 @@ create policy "owner deletes own generations"
   for delete
   using (auth.uid() = user_id);
 
+grant select, insert, update, delete
+  on table public.generations
+  to authenticated;
+
+grant select, insert, update, delete
+  on table public.generations
+  to service_role;
+
 -- ───────────────────────────────────────────────────────────
 -- STORAGE
 -- ───────────────────────────────────────────────────────────

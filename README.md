@@ -111,7 +111,7 @@ pnpm install --frozen-lockfile
 cp .env.example .env.local
 ```
 
-Fill `.env.local` from [`.env.example`](.env.example), apply [`001_sherin.sql`](supabase/migrations/001_sherin.sql), then start the app:
+Fill `.env.local` from [`.env.example`](.env.example), apply [`001_sherin.sql`](supabase/migrations/001_sherin.sql), then start the app. The migration grants table access to authenticated users and the server-side worker; row-level security continues to restrict owner access.
 
 For local sign-in, add `http://localhost:3011/auth/callback` to Supabase Auth Redirect URLs.
 
