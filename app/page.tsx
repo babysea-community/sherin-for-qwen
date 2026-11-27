@@ -202,8 +202,8 @@ export default function HomePage() {
 
             <p className="mt-6 max-w-2xl text-base leading-8 text-slate-300 sm:text-lg">
               Sherin is a self-hosted private workspace for generative media,
-              built for creators, artists, and developers who want more
-              ownership over their creative workflow.
+              built for creators and developers who want more ownership over
+              their creative workflow.
             </p>
 
             <div className="mt-10 flex flex-row flex-nowrap items-center gap-2 sm:gap-3">

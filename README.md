@@ -4,7 +4,7 @@
 
 # Sherin for Qwen
 
-A self-hosted private workspace for generative media, built for creators and developers who want more ownership over their creative workflow, powered by Alibaba Cloud models.
+A self-hosted private workspace for generative media, built for creators and developers who want more ownership over their creative workflow, powered by Qwen models.
 
 ### Own key. Own domain. Own storage.
 

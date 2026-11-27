@@ -73,7 +73,7 @@ export default async function AccessPage({ searchParams }: AccessPageProps) {
               href={getSiteUrl()}
               className="font-medium text-fuchsia-200 underline decoration-fuchsia-200/40 underline-offset-4 transition hover:text-fuchsia-100 hover:decoration-fuchsia-100"
             >
-              homepage
+              home
             </a>
             .
           </p>

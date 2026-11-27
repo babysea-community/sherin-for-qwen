@@ -1,7 +1,7 @@
 {
   "name": "sherin-for-qwen",
   "version": "0.1.0",
-  "description": "A self-hosted private workspace for generative media, built for creators and developers who want more ownership over their creative workflow.",
+  "description": "A self-hosted private workspace for generative media, built for creators and developers who want more ownership over their creative workflow, powered by Qwen models.",
   "private": true,
   "license": "Apache-2.0",
   "homepage": "https://sherin-for-qwen.babysea.live",
