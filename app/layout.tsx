@@ -4,7 +4,7 @@ import { Toaster } from '@/components/ui/sonner';
 
 const title = 'Sherin';
 const description =
-  'Private workspace for generative media with own key, domain, and storage.';
+  'A self-hosted private workspace for generative media, built for creators and developers who want more ownership over their creative workflow.';
 const socialImageUrl =
   'https://cdn.babysea.live/assets/oss/sherin-for-qwen-card.png';
 

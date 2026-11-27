@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { GooBackground } from '@/lib/utils/goo/background';
 import { InlineGoogle } from '@/components/icons/inline-oauth';
+import { getSiteUrl } from '@/lib/utils/env';
 import { signInWithGoogle } from './_lib/server-actions';
 
 export const metadata: Metadata = {
@@ -66,6 +67,13 @@ export default async function AccessPage({ searchParams }: AccessPageProps) {
               className="font-medium text-fuchsia-200 underline decoration-fuchsia-200/40 underline-offset-4 transition hover:text-fuchsia-100 hover:decoration-fuchsia-100"
             >
               here
+            </a>
+            {' or back to '}
+            <a
+              href={getSiteUrl()}
+              className="font-medium text-fuchsia-200 underline decoration-fuchsia-200/40 underline-offset-4 transition hover:text-fuchsia-100 hover:decoration-fuchsia-100"
+            >
+              homepage
             </a>
             .
           </p>
